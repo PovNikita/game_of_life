@@ -1,0 +1,3 @@
+/home/nikita/projects/game_of_life/build/CMakeFiles/gameoflife.dir
+/home/nikita/projects/game_of_life/build/CMakeFiles/edit_cache.dir
+/home/nikita/projects/game_of_life/build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/gameoflife.dir/main.cpp.o CMakeFiles/gameoflife.dir/core.cpp.o CMakeFiles/gameoflife.dir/user_interface.cpp.o CMakeFiles/gameoflife.dir/SDL_wrappler.cpp.o -o gameoflife  /usr/lib/x86_64-linux-gnu/libSDL2.so -lSDL2_ttf 
