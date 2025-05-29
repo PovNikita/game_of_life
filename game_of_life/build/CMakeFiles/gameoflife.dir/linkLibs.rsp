@@ -1,0 +1,1 @@
+ C:/dev/game_of_life/game_of_life/SDL2/lib/libSDL2.dll.a C:/dev/game_of_life/game_of_life/SDL2/lib/libSDL2_ttf.dll.a -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

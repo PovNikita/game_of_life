@@ -8,7 +8,6 @@ Grid::Grid(int rows, int cols)
     : rows_(rows)
     , cols_(cols)
 {
-    std::cout << "Creating Grid: rows = " << rows_ << ", cols = " << cols_ << std::endl;
     cells_.resize(rows_);
     for(int i = 0; i < rows_; ++i)
     {
@@ -125,7 +124,6 @@ std::vector<std::pair<int, int>> Grid::GetNeighboursCoordinates(int row, int col
             int new_col = col + dc;
             new_row = (new_row + rows_) % rows_;
             new_col = (new_col + cols_) % cols_;
-            //std::cout << "New_row: " << new_row << " new_col: " << new_col << std::endl;
             neigbours_coordinate.push_back({new_row, new_col});
 
         }
@@ -133,40 +131,20 @@ std::vector<std::pair<int, int>> Grid::GetNeighboursCoordinates(int row, int col
     return neigbours_coordinate;
 }
 
-void Game::HandleWindowSize()
-{
-    if(std::max(grid_.GetCols(), grid_.GetRows()) > 70)
-    {
-        grid_height_ += 400;
-        grid_width_ += 400;
-    }
-    cell_width_ = grid_width_ / grid_.GetCols();
-    cell_height_ = grid_height_ / grid_.GetRows();
-    if(grid_.GetRows() > grid_.GetCols())
-    {
-        double koef = grid_.GetRows() / grid_.GetCols();
-        cell_height_ = static_cast<int>(cell_height_ * koef);
-        grid_height_ = static_cast<int>(koef * grid_height_);
-    }
-    else if(grid_.GetCols() > grid_.GetRows())
-    {
-        double koef = grid_.GetCols() / grid_.GetRows();
-        cell_width_ = static_cast<int>(cell_width_ * koef);
-        grid_width_ = static_cast<int>(koef * grid_width_);
-    }
-}
-
-Game::Game(int rows, int cols, uint32_t delay)
-    : grid_(rows, cols)
+Game::Game(int rows, int grid_length, uint32_t delay)
+    : grid_(rows, rows)
     , is_start_(false)
-    , grid_width_(grid_width)
-    , grid_height_(grid_height)
+    , grid_length_(grid_length)
     , delay_(delay)
+    , cell_length_(grid_length_/rows)
 {
-    HandleWindowSize();
+    if(grid_length % rows != 0)
+    {
+        grid_length_ = cell_length_ * rows;
+    }
     using namespace std::literals;
     window_ = SDL_CreateWindow("Game of life", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                                          grid_width_ + window_height_offset_with_button, grid_height_, SDL_WINDOW_SHOWN);
+                                          grid_length_ + window_height_offset_with_button, grid_length_, SDL_WINDOW_SHOWN);
     if (!window_) {
         std::string error(SDL_GetError());
         throw std::runtime_error("SDL_CreateWindow Error: "s + error + "\n"s);
@@ -178,7 +156,7 @@ Game::Game(int rows, int cols, uint32_t delay)
         SDL_DestroyWindow(window_);
         throw std::runtime_error("SDL_CreateRenderer Error: "s + error + "\n"s);
     }
-    pause_button_ = std::make_unique<Button>(SDL_Rect{grid_width_ + distance_between_buttons_and_grid, button_offset_from_y0, 
+    pause_button_ = std::make_unique<Button>(SDL_Rect{grid_length_ + distance_between_buttons_and_grid, button_offset_from_y0, 
                                                         button_weight, button_height}, 
                                             button_color,
                                             [this]() { this->HandlePauseButton(); },"Start"s, renderer_);
@@ -211,10 +189,10 @@ void Game::Run()
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
                 SDL_Rect cellRect = {
-                    col * cell_width_,
-                    row * cell_height_,
-                    cell_width_,
-                    cell_height_
+                    col * cell_length_,
+                    row * cell_length_,
+                    cell_length_,
+                    cell_length_
                 };
                 {
                     std::lock_guard<std::mutex> lock(access_to_grid_);
@@ -239,35 +217,25 @@ void Game::Run()
 
 void Game::HandleGenerations()
 {
+    std::this_thread::sleep_for(std::chrono::milliseconds(100u));
     while(1)
     {
-        if(access_to_is_running_.try_lock())
         {
+            std::lock_guard<std::mutex> lock(access_to_is_running_);
             if(is_running_ == false)
             {
-                access_to_is_running_.unlock();
                 break;
             }
-            else
-            {
-                access_to_is_running_.unlock();
-            }
         }
-        if(access_to_is_start_.try_lock())
         {
+            std::lock_guard<std::mutex> lock(access_to_is_start_);
             if(is_start_) 
             {
-                access_to_is_start_.unlock();
                 {
                     std::lock_guard<std::mutex> lock(access_to_grid_);
                     grid_.NextGeneration();
                 }
             }
-            else
-            {
-                access_to_is_start_.unlock();
-            }
-
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(std::max(delay_, 1u)));
     }
@@ -278,7 +246,7 @@ void Game::HandleGenerations()
 
 void Game::HandleMouseClick(const SDL_Event &event)
 {
-    if(event.button.x > grid_width_)
+    if(event.button.x > grid_length_)
     {
         pause_button_->HandleEvent(event);
     }
@@ -294,8 +262,8 @@ void Game::HandleGridClick(const SDL_Event &event)
     int mouseX = event.button.x;
     int mouseY = event.button.y;
 
-    int col = mouseX / cell_width_;
-    int row = mouseY / cell_height_;
+    int col = mouseX / cell_length_;
+    int row = mouseY / cell_length_;
     {
         std::lock_guard<std::mutex> lock(access_to_grid_);
         if (row >= 0 && row < grid_.GetRows() && col >= 0 && col < grid_.GetCols()) {

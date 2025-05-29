@@ -1,9 +1,18 @@
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <iostream>
 #include <vector>
 #include <iostream>
 #include "core.h"
 #include <string>
+
+#ifdef _WIN32
+#include <windows.h>
+int main(int argc, char* argv[]);
+
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR lpCmdLine, int nCmdShow) {
+    return main(__argc, __argv);
+}
+#endif
 
 const int GRID_SIZE = 20;
 
@@ -11,7 +20,6 @@ int main(int argc, char** argv) {
     using namespace std::literals;
     if(argc != 4)
     {
-        std::cout << "The number of arguments has to be 3. The current number is: "s << argc - 1 << std::endl;
         return 1;
     }
 

@@ -8,10 +8,10 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/nikita/projects/game_of_life/SDL_wrappler.cpp" "CMakeFiles/gameoflife.dir/SDL_wrappler.cpp.o" "gcc" "CMakeFiles/gameoflife.dir/SDL_wrappler.cpp.o.d"
-  "/home/nikita/projects/game_of_life/core.cpp" "CMakeFiles/gameoflife.dir/core.cpp.o" "gcc" "CMakeFiles/gameoflife.dir/core.cpp.o.d"
-  "/home/nikita/projects/game_of_life/main.cpp" "CMakeFiles/gameoflife.dir/main.cpp.o" "gcc" "CMakeFiles/gameoflife.dir/main.cpp.o.d"
-  "/home/nikita/projects/game_of_life/user_interface.cpp" "CMakeFiles/gameoflife.dir/user_interface.cpp.o" "gcc" "CMakeFiles/gameoflife.dir/user_interface.cpp.o.d"
+  "C:/dev/game_of_life/game_of_life/SDL_wrappler.cpp" "CMakeFiles/gameoflife.dir/SDL_wrappler.cpp.obj" "gcc" "CMakeFiles/gameoflife.dir/SDL_wrappler.cpp.obj.d"
+  "C:/dev/game_of_life/game_of_life/core.cpp" "CMakeFiles/gameoflife.dir/core.cpp.obj" "gcc" "CMakeFiles/gameoflife.dir/core.cpp.obj.d"
+  "C:/dev/game_of_life/game_of_life/main.cpp" "CMakeFiles/gameoflife.dir/main.cpp.obj" "gcc" "CMakeFiles/gameoflife.dir/main.cpp.obj.d"
+  "C:/dev/game_of_life/game_of_life/user_interface.cpp" "CMakeFiles/gameoflife.dir/user_interface.cpp.obj" "gcc" "CMakeFiles/gameoflife.dir/user_interface.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <functional>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include "user_interface.h"
 #include "SDL_wrappler.h"
 #include <memory>
@@ -10,8 +10,6 @@
 static const SDLInit sdl_controller;
 const int button_weight = 70;
 const int button_height = 35;
-const int grid_width = 600;
-const int grid_height = 600;
 const int distance_between_buttons_and_grid = 10;
 const int button_offset_from_y0 = 10;
 const int window_height_offset_with_button = distance_between_buttons_and_grid + button_weight + 10;
@@ -66,7 +64,7 @@ private:
 
 class Game {
 public:
-    explicit Game(int rows, int cols, uint32_t delay = 0);
+    explicit Game(int rows, int grid_length,uint32_t delay = 0);
 
     void Run();
 
@@ -74,14 +72,14 @@ public:
 
 private:
     Grid grid_;
-    int grid_width_;
-    int grid_height_;
+    int grid_length_;
+    /*int grid_width_;
+    int grid_height_;*/
     uint32_t delay_;
 
     SDL_Window* window_;
     SDL_Renderer* renderer_;
-    int cell_width_;
-    int cell_height_;
+    int cell_length_;
 
     std::unique_ptr<Button> pause_button_;
     void HandleGenerations();
@@ -90,7 +88,6 @@ private:
     void HandleGridClick(const SDL_Event &event);
     void HandlePauseButton();
     void ToggleCell(int row, int col);
-    void HandleWindowSize();
 
     bool is_start_;
     bool is_running_ = false;
